@@ -29,4 +29,4 @@ Images are published to GHCR via GitHub Actions on each `v*` tag push:
 ghcr.io/vol1003-labs/hermes-sandbox:<tag>
 ```
 
-The package is public — k3s nodes pull anonymously without registry credentials.
+The GHCR package must be set to public (package settings → Change visibility) so k3s nodes can pull anonymously without registry credentials.
