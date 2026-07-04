@@ -1,0 +1,11 @@
+Port 2222
+HostKey /home/pn/ssh-host/ssh_host_ed25519_key
+PidFile /home/pn/ssh-host/sshd.pid
+AuthorizedKeysFile /etc/ssh-auth/authorized_keys
+StrictModes no
+PasswordAuthentication no
+KbdInteractiveAuthentication no
+PermitRootLogin no
+AllowUsers pn
+X11Forwarding no
+Subsystem sftp internal-sftp
