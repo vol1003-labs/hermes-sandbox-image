@@ -1,0 +1,18 @@
+{
+  "name": "web-clip default",
+  "behavior": "create",
+  "noteNameFormat": "{{title|safe_name}}",
+  "noteContentFormat": "> [!info] {{description}}\n\n{{content}}",
+  "properties": [
+    { "name": "title", "value": "{{title}}", "type": "text" },
+    { "name": "source", "value": "{{url}}", "type": "text" },
+    { "name": "author", "value": "{{author}}", "type": "text" },
+    { "name": "published", "value": "{{published|date:\"YYYY-MM-DD\"}}", "type": "date" },
+    { "name": "clipped", "value": "{{date|date:\"YYYY-MM-DD\"}}", "type": "date" },
+    { "name": "site", "value": "{{site}}", "type": "text" },
+    { "name": "description", "value": "{{description}}", "type": "text" },
+    { "name": "tags", "value": "raw/article", "type": "multitext" },
+    { "name": "type", "value": "article", "type": "text" }
+  ],
+  "triggers": []
+}

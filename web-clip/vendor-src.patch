@@ -1,0 +1,52 @@
+diff --git a/scripts/build-api.mjs b/scripts/build-api.mjs
+index 1eed41e..344117b 100644
+--- a/scripts/build-api.mjs
++++ b/scripts/build-api.mjs
+@@ -4,23 +4,28 @@ import { fileURLToPath } from 'url';
+ 
+ const __dirname = path.dirname(fileURLToPath(import.meta.url));
+ const root = path.resolve(__dirname, '..');
++const defuddleDir = path.join(root, 'node_modules/defuddle/dist');
+ 
++// Headless-node adaptation of the upstream build:api (see web-clip README):
++//  - platform 'node' (was 'neutral') so dayjs' legacy `main` resolves;
++//  - bundle defuddle + defuddle/full via the same dist aliases build-cli.mjs uses
++//    (defuddle/full is CJS; named ESM import fails if left external);
++//  - only linkedom stays external (provided by the wrapper's node_modules).
+ await esbuild.build({
+ 	entryPoints: [path.join(root, 'src/api.ts')],
+ 	bundle: true,
+-	platform: 'neutral',
++	platform: 'node',
++	target: 'node18',
+ 	format: 'esm',
+ 	outfile: path.join(root, 'dist/api.mjs'),
+-	external: [
+-		'defuddle',
+-		'defuddle/full',
+-		'dayjs',
+-	],
++	external: ['linkedom'],
+ 	define: {
+ 		'DEBUG_MODE': 'false',
+ 	},
+ 	alias: {
+ 		'webextension-polyfill': path.join(root, 'src/utils/cli-stubs.ts'),
++		'defuddle/full': path.join(defuddleDir, 'index.full.js'),
++		'defuddle': path.join(defuddleDir, 'index.js'),
+ 	},
+ 	logLevel: 'info',
+ });
+diff --git a/src/api.ts b/src/api.ts
+index cadd3f8..b0625f5 100644
+--- a/src/api.ts
++++ b/src/api.ts
+@@ -182,7 +182,7 @@ export async function clip(options: ClipOptions): Promise<ClipResult> {
+ 
+ 	// Extract content with defuddle
+ 	// Cast through unknown: linkedom's Document is structurally compatible but not nominally typed as DOM Document
+-	const defuddle = new DefuddleClass(documentElement as unknown as Document, { url });
++	const defuddle = new DefuddleClass(doc as unknown as Document, { url });
+ 	const defuddleResult = defuddle.parse();
+ 
+ 	// Convert to markdown
